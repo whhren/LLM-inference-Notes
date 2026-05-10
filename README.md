@@ -4,11 +4,11 @@
 
 目前内容包括：
 
-- [大模型推理基础](./大模型推理基础.md)
-- [大模型推理顶会](./大模型推理顶会.md)
-- [vLLM 与 LLaMA 解析](./vllm-llama解析.md)
-- [LatencyPrism 解读](./LatencyPrism解读.md)
-- [调度领域近况](./调度领域近况.md)
+- [大模型推理基础](./infer-basic.md)
+- [大模型推理顶会](./infer-top-papers.md)
+- [vLLM 与 LLaMA 解析](./vllm-llama-code.md)
+- [LatencyPrism 解读](./LatencyPrism.md)
+- [调度领域近况](./infer-field.md)
 
 同时，我建立了一个微信群，方便大家交流、讨论和分享学习经验。
 
