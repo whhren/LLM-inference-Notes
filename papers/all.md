@@ -87,3 +87,13 @@ Latency sensitive(优先考虑TTFT，TBT) ，deadline-sensitive(timeto-last-toke
 Beyond Prediction, ICML 2026                                        
 Scheduling with Uncertainty-Aware Output Length Predictions       
    ICML 2026
+
+
+
+| **Past-Future Scheduler for LLM Serving under SLA Guarantees** | ASPLOS 2025 | A | 结合历史模式和未来预测的 SLA 保障 |
+| **TAPAS: Thermal- and Power-Aware Scheduling in Cloud Platforms** | ASPLOS 2025 | A | 热/功耗感知调度，区分 prefill/decode |
+| **SuperServe: Fine-Grained Inference Serving for Unpredictable Workloads** | NSDI 2025 | A | 不可预测负载的细粒度推理服务 |
+
+| **WaferLLM: Large Language Model Inference at Wafer Scale** | OSDI 2025 | A | 首个晶圆级 LLM 推理系统（Cerebras WSE-2），PLMR 模型 + MeshGEMM，比 A100 集群快 10-20× (Edinburgh, MSR) |
+| **BlitzScale: Fast and Live Large Model Autoscaling with O(1) Host Caching** | OSDI 2025 | A | Serverless 模型弹性扩缩，GPU 计算网络替代 host 缓存，层级别活迁移，尾延迟降低 94% (SJTU, Huawei) |
+| **DecDEC: A Systems Approach to Advancing Low-Bit LLM Quantization** | OSDI 2025 | A | 3/4-bit 低比特量化质量提升，动态获取残差矩阵改善 on-device 推理 (Seoul National Univ) |
