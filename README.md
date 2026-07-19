@@ -27,9 +27,12 @@
 
 - [Beyond Prediction](./papers/Beyond-Prediction.md):Beyond Prediction: Tail-Aware Scheduling for LLM Inference(`ICML 2026`[CCF-A])：文章借鉴排队理论中的 γBoost（Tail-optimal scheduling）算法，提出了一种面向LLM推理的Boost调度策略。该方法借鉴 $\gamma$ Boost，通过参数 $\gamma$ 调节请求工作量对优先级的影响程度，使调度器能够在 FCFS（优先保障等待时间）和 LAS（优先处理已完成工作量较少的请求）之间动态调整。
 
+## 局限性的工作
+这类文章仅针对某一类型的大模型进行调度优化
 
+- [PASCAL](./papers/PASCAL.md): A Phase-Aware Scheduling Algorithm for Serving Reasoning-based Large Language Model(`HPCA 2026`[CCF-A]):Reasoning-based模型推理Decode阶段分为Reasoning和Answering，文章优先处理Reasoning阶段的请求，提升这部分的TTFT。
 
-## 其他
+## 切分请求
 
 - 1.[NanoFlow](./papers/NanoFlow.md): Towards Optimal Large Language Model Serving Throughput  (`OSDI 2025` [CCF-A])：从设备内执行调度角度入手，把输入切成更小的 `nano-batches`，自动决定批大小、执行顺序和资源分配，尽量将计算、访存和通信overlap，来提升GPU的利用率，进而提升整体 serving throughput。 在当时可以实现比vLLM快4.18×，比TensorRT-LLM快1.91×。这里没和SGLang比较。文章中实验部分可以细看，损失模型的建立值得学习和复用。
 
