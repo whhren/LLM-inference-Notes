@@ -49,12 +49,12 @@ LightLLM 采用多进程架构，本实验主要在 Router 调度侧进行修改
 
 **请求输出长度的分布**
 
-![5000 条请求的输出长度分布](images/fcfs_rate10_req5000_output_distribution.png)
+![5000 条请求的输出长度分布](../images/fcfs_rate10_req5000_output_distribution.png)
 
 不同请求的输出长度存在明显差异，说明请求的生成负载并不均匀，为研究基于请求长度的调度策略提供了依据。
 
 **请求输入和输出长度的相关性**
-![5000 条请求下的输入与输出长度关系](images/fcfs_rate10_req5000_input_vs_output.png)
+![5000 条请求下的输入与输出长度关系](../images/fcfs_rate10_req5000_input_vs_output.png)
 
 Pearson 相关系数（$r$）用于衡量两个变量之间的**线性相关程度**，取值范围为 $[-1,1]$。其中，正值表示正相关，负值表示负相关，绝对值越大，线性相关程度通常越强。
 
@@ -136,23 +136,23 @@ Pearson 相关系数（$r$）用于衡量两个变量之间的**线性相关程�
 
 **Rate = 3**
 
-![Rate 3 不同输出长度区间的平均延迟](images/rate3_latency.png)
+![Rate 3 不同输出长度区间的平均延迟](../images/rate3_latency.png)
 
 **Rate = 4**
 
-![Rate 4 不同输出长度区间的平均延迟](images/rate4_latency.png)
+![Rate 4 不同输出长度区间的平均延迟](../images/rate4_latency.png)
 
 **Rate = 5**
 
-![Rate 5 不同输出长度区间的平均延迟](images/rate5_latency.png)
+![Rate 5 不同输出长度区间的平均延迟](../images/rate5_latency.png)
 
 **Rate = 6**
 
-![Rate 6 不同输出长度区间的平均延迟](images/rate6_latency.png)
+![Rate 6 不同输出长度区间的平均延迟](../images/rate6_latency.png)
 
 **Rate = 7**
 
-![Rate 7 不同输出长度区间的平均延迟](images/rate7_latency.png)
+![Rate 7 不同输出长度区间的平均延迟](../images/rate7_latency.png)
 
 通过按输出长度分组，可以进一步观察不同策略在各长度区间内的表现。表现和之前表格中显示的结果一致。并没有明显的优化，整体上比不过FCFS。
 
