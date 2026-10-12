@@ -39,3 +39,9 @@
 
 
 同时，我建立了一个微信群，方便大家交流、讨论和分享学习经验。有需要可以添加我的微信：whhsleeping
+
+# 实践与源码分析
+
+- **[LightLLM 调度器源码分析：基于历史请求长度分布的调度机制](./Lightllm/lightllm.md)**：结合 `Past-Future Scheduler for LLM Serving under SLA Guarantees`，分析 LightLLM 的请求分组、Batch 构建与 Admission Control 机制，重点研究历史请求输出长度分布、未来 Token 需求估计及 KV Cache 容量约束如何影响请求准入。
+
+- **[LightLLM 调度源码分析与实践：基于历史请求长度分布的调度优化](./Lightllm/LightLLM-sche.md)**：基于 LightLLM 修改请求调度策略，对比 FCFS 与 SJF 在不同请求到达速率下的表现，统计吞吐量、平均延迟、TTFT、ITL 及不同分位数延迟，并结合请求输出长度分布分析调度策略的实际效果。
