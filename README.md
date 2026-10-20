@@ -10,6 +10,9 @@
 - [领域近况](./notes/infer-field.md)
 - [Aleksa Gordić---详解vLLM](./notes/vllm-anatomy-translated.md)
 
+# 基础梳理
+- 大模型推理流程的梳理，从矩阵大小变化的角度。[推理流程](./notes/infer-process.md)
+
 
 # 大模型推理顶会论文分享---调度领域：
 
