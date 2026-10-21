@@ -1,50 +1,58 @@
 # 大模型推理学习笔记
 
-这是一个关于大模型推理的学习笔记仓库，用来记录相关知识、阅读理解与实践过程中的整理和总结。
+记录大模型推理相关的知识整理、论文阅读、源码分析与实践实验。
 
-目前内容包括：
+主要关注 LLM Inference、LLM Serving、请求调度与推理性能优化，通过阅读论文、分析开源框架和动手实验，理解大模型推理系统的设计原理与优化方法。
 
-- [大模型推理基础](./notes/infer-basic.md)
-- [大模型推理顶会](./notes/infer-top-papers.md)
-- [vLLM 中 LLaMA 解析](./notes/vllm-llama-code.md)
-- [领域近况](./notes/infer-field.md)
-- [Aleksa Gordić---详解vLLM](./notes/vllm-anatomy-translated.md)
+## 基础知识
 
-# 基础梳理
-- 大模型推理流程的梳理，从矩阵大小变化的角度。[推理流程](./notes/infer-process.md)
+- [大模型推理基础](./notes/infer-basic.md)：整理大模型推理的基本原理与核心技术。
+- [大模型推理流程](./notes/infer-process.md)：从矩阵规模变化的角度梳理大模型推理流程。
+- [vLLM 中 LLaMA 解析](./notes/vllm-llama-code.md)：分析 vLLM 中 LLaMA 模型的实现。
+- [Anatomy of vLLM：vLLM 详解](./notes/vllm-anatomy-translated.md)：学习 vLLM 的系统设计与实现原理。
+- [大模型推理领域近况](./notes/infer-field.md)：整理推理系统领域的技术进展。
 
+## 论文阅读：推理调度
 
-# 大模型推理顶会论文分享---调度领域：
+整理大模型推理系统中的请求调度与性能优化研究，重点关注输出长度预测、SLO 约束、尾延迟优化与请求切分等方向。
 
-## 预测请求输出的长度的工作(SJF-like)
-这个想法最主要是目的是使用SJF(Shortest job frist)或是SRPT(Shortest Remaining Processing Time)，在得到请求的输出长度后，能较快完成比较短的任务。
+**1. 基于输出长度预测的调度**
 
-- [Past-Future Scheduler](./papers/Past-Future-Scheduler.md): Past-Future Scheduler for LLM Serving under SLA Guarantees (`ASPLOS 2025` [CCF-A])：针对 LLM serving 中请求输出长度和未来 KV Cache 占用未知的问题，提出了一种基于历史请求分布的预测调度方法。该方法预测 waiting/running 请求未来生成长度，并估计加入新请求后的KV Cache峰值，从而动态决定是否将请求加入batch，在避免eviction和SLA violation的同时提升有效吞吐（goodput）。文章提出了 LightLLM 框架，实验重点可以关注输出长度预测、未来显存估计以及 SLA 约束下 goodput 优化。
+这类方法尝试预测请求的输出长度或剩余工作量，并据此调整请求优先级或决定请求准入，以改善服务效率。
 
-- [JITServe](./papers/JITServe.md): Just-In-Time Scheduling for Large Language Model Serving (`NSID 2026` [CCF-A])：从 SLO-aware 调度角度入手，针对不同类型LLM 请求（latency-sensitive、deadline-sensitive、compound requests），通过请求分析预测剩余工作量和资源需求，并提出 GMAX 调度算法动态选择 batch，在满足 SLO 的同时最大化 serving goodput。同时支持多模型部署、动态抢占以及复杂 Agent 工作流。
+- [Past-Future Scheduler](./papers/Past-Future-Scheduler.md)：Past-Future Scheduler for LLM Serving under SLA Guarantees（ASPLOS 2025，CCF-A）。基于历史请求分布预测未来 Token 需求，并结合 KV Cache 容量约束进行请求准入，优化 SLA 约束下的有效吞吐量（goodput）。
+- [JITServe](./papers/JITServe.md)：Just-In-Time Scheduling for Large Language Model Serving（NSDI 2026，CCF-A）。面向不同类型的请求与服务目标，预测剩余工作量和资源需求，通过 GMAX 调度算法动态选择 Batch，以提升满足 SLO 的有效吞吐量。
 
+**2. 基于排队论的调度**
 
+这类方法借鉴经典排队理论与操作系统调度思想，并结合 LLM 推理的执行特点设计调度策略。
 
-## 基于Queueing Theory的工作
-这类工作借鉴操作系统或排队论中的经典调度理论，并结合LLM推理特点（KV Cache、Continuous Batching、Prefill/Decode等）进行改造。
+- [Beyond Prediction](./papers/Beyond-Prediction.md)：Beyond Prediction: Tail-Aware Scheduling for LLM Inference（ICML 2026，CCF-A）。研究面向尾延迟的调度方法，通过调节请求工作量对调度优先级的影响，在不同调度目标之间进行权衡。
 
-- [Beyond Prediction](./papers/Beyond-Prediction.md):Beyond Prediction: Tail-Aware Scheduling for LLM Inference(`ICML 2026`[CCF-A])：文章借鉴排队理论中的 γBoost（Tail-optimal scheduling）算法，提出了一种面向LLM推理的Boost调度策略。该方法借鉴 $\gamma$ Boost，通过参数 $\gamma$ 调节请求工作量对优先级的影响程度，使调度器能够在 FCFS（优先保障等待时间）和 LAS（优先处理已完成工作量较少的请求）之间动态调整。
+**3. 面向特定推理阶段的调度**
 
-## 局限性的工作
-这类文章仅针对某一类型的大模型进行调度优化
+这类方法针对特定模型或推理阶段的特点设计专门的调度策略。
 
-- [PASCAL](./papers/PASCAL.md): A Phase-Aware Scheduling Algorithm for Serving Reasoning-based Large Language Model(`HPCA 2026`[CCF-A]):Reasoning-based模型推理Decode阶段分为Reasoning和Answering，文章优先处理Reasoning阶段的请求，提升这部分的TTFT。
+- [PASCAL](./papers/PASCAL.md)：A Phase-Aware Scheduling Algorithm for Serving Reasoning-based Large Language Model（HPCA 2026，CCF-A）。针对推理模型的 Reasoning 与 Answering 阶段，研究阶段感知的请求调度策略。
 
-## 切分请求
+**4. 基于请求切分的调度**
 
-- 1.[NanoFlow](./papers/NanoFlow.md): Towards Optimal Large Language Model Serving Throughput  (`OSDI 2025` [CCF-A])：从设备内执行调度角度入手，把输入切成更小的 `nano-batches`，自动决定批大小、执行顺序和资源分配，尽量将计算、访存和通信overlap，来提升GPU的利用率，进而提升整体 serving throughput。 在当时可以实现比vLLM快4.18×，比TensorRT-LLM快1.91×。这里没和SGLang比较。文章中实验部分可以细看，损失模型的建立值得学习和复用。
+这类方法通过将请求或执行任务切分为更细粒度的单元，优化 GPU 资源利用率与整体吞吐量。
 
+- [NanoFlow](./papers/NanoFlow.md)：Towards Optimal Large Language Model Serving Throughput（OSDI 2025，CCF-A）。将输入请求切分为更小的 nano-batches，联合优化批大小、执行顺序与资源分配，以提升 GPU 利用率和整体 Serving 吞吐量。
 
+## 源码分析与实践
 
-同时，我建立了一个微信群，方便大家交流、讨论和分享学习经验。有需要可以添加我的微信：whhsleeping
+**1. LightLLM 源码分析**
 
-# 实践与源码分析
+- [LightLLM 调度器源码分析：基于历史请求长度分布的调度机制](./Lightllm/lightllm.md)：结合 Past-Future Scheduler 相关研究，分析请求分组、Batch 构建与 Admission Control，重点研究历史输出长度分布、未来 Token 需求估计及 KV Cache 容量约束。
 
-- **[LightLLM 调度器源码分析：基于历史请求长度分布的调度机制](./Lightllm/lightllm.md)**：结合 `Past-Future Scheduler for LLM Serving under SLA Guarantees`，分析 LightLLM 的请求分组、Batch 构建与 Admission Control 机制，重点研究历史请求输出长度分布、未来 Token 需求估计及 KV Cache 容量约束如何影响请求准入。
+**2. LightLLM 调度实验**
 
-- **[LightLLM 调度源码分析与实践：基于历史请求长度分布的调度优化](./Lightllm/LightLLM-sche.md)**：基于 LightLLM 修改请求调度策略，对比 FCFS 与 SJF 在不同请求到达速率下的表现，统计吞吐量、平均延迟、TTFT、ITL 及不同分位数延迟，并结合请求输出长度分布分析调度策略的实际效果。
+- [LightLLM 调度源码分析与实践：基于历史请求长度分布的调度优化](./Lightllm/LightLLM-sche.md)：修改 LightLLM 的请求调度策略，对比 FCFS 与 SJF 在不同请求到达速率下的表现，分析吞吐量、平均延迟、TTFT、ITL 与不同分位数延迟，并结合请求输出长度分布讨论实验结果。
+
+## 交流与反馈
+
+欢迎交流大模型推理系统、推理框架实现与请求调度相关的技术问题。
+
+建立了一个微信群，方便大家交流与分享学习经验。有需要可以添加微信：whhsleeping。
