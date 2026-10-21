@@ -41,6 +41,11 @@
 
 - [NanoFlow](./papers/NanoFlow.md)：Towards Optimal Large Language Model Serving Throughput（OSDI 2025，CCF-A）。将输入请求切分为更小的 nano-batches，联合优化批大小、执行顺序与资源分配，以提升 GPU 利用率和整体 Serving 吞吐量。
 
+
+**5.基于输出长度预测与不确定性感知的调度**
+
+- [TIE](./papers/TIE.md)：Scheduling LLM Inference with Uncertainty-Aware Output Length Predictions（ICML 2026，CCF-A）。使用 Log-t 分布建模请求的输出长度，通过 DeBERTa 预测分布参数，并结合期望与 CVaR 评估长尾风险，动态调整请求优先级，以降低队头阻塞并改善推理性能。
+
 ## 源码分析与实践
 
 **1. LightLLM 源码分析**
